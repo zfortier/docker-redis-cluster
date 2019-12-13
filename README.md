@@ -53,7 +53,7 @@ export REDIS_CLUSTER_IP=0.0.0.0
 If you are downloading the container from dockerhub, you must add the internal IP envrionment variable to your `docker run` command.
 
 ```
-docker run grokzen/redis-cluster:latest -e "IP=0.0.0.0" ...
+docker run  -e "IP=0.0.0.0" grokzen/redis-cluster:latest ...
 ```
 
 
@@ -113,6 +113,32 @@ When running with docker-compose set the environment variable on your system `RE
           ...
         environment:
           SENTINEL: 'true'
+
+
+## Change number of nodes
+
+Be default, it is going to launch 3 masters with 1 slave per master. This is configurable through a number of environment variables:
+
+| Environment variable | Default |
+| -------------------- |--------:|
+| `INITIAL_PORT`       |    7000 |
+| `MASTERS`            |       3 |
+| `SLAVES_PER_MASTER`  |       1 | 
+
+Therefore, the total number of nodes (`NODES`) is going to be `$MASTERS * ( $SLAVES_PER_MASTER  + 1 )` and ports are going to range from `$INITIAL_PORT` to `$INITIAL_PORT + NODES - 1`.
+
+At the docker-compose provided by this repository, ports 7000-7050 are already mapped to the hosts'. Either if you need more than 50 nodes in total or if you need to change the initial port number, you should override those values.
+
+Also note that the number of sentinels (if enabled) is the same as the number of masters. The docker-compose file already maps ports 5000-5010 by default. You should also override those values if you have more than 10 masters.
+
+      version: '2'
+      services:
+        redis-cluster:
+          ...
+        environment:
+          INITIAL_PORT: 9000,
+          MASTERS: 2,
+          SLAVES_PER_MASTER: 2
 
 
 ## Build alternative redis versions
