@@ -1,4 +1,3 @@
-# Build from commits based on redis:3.2
 FROM redis@sha256:000339fb57e0ddf2d48d72f3341e47a8ca3b1beae9bdcb25a96323095b72a79b
 
 LABEL maintainer="Johan Andersson <Grokzen@gmail.com>"
